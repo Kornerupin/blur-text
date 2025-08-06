@@ -1,0 +1,123 @@
+/*
+ * Стили для библиотеки BlurText
+ * Версия: 1.3 (логика высоты переписана на calc() для исправления бага с маской)
+ */
+
+// --- Настраиваемые переменные ---
+
+// Общие параметры эффекта
+:root {
+  --blur-text-amount: 5px;      // Сила размытия
+  --blur-text-padding: 0.2em;   // Дополнительное пространство вокруг буквы для размытия
+  --blur-text-radius: 4px;      // Радиус скругления области размытия
+  --blur-text-mask-sharpness: 25%; // Плавность края маски размытия (от 0% до 50%)
+  
+  // Мультипликатор для динамического управления высотой размытия
+  --blur-height-multiplier: 1.0; // 1.0 = 100% от базовой высоты, 0.5 = 50% и т.д.
+}
+
+// Базовые параметры для каждого типа букв (до применения мультипликатора)
+:root {
+  // Высокие буквы (заглавные и некоторые строчные)
+  --tallUp-height: 100%;
+  --tallUp-top: 0%;
+  
+  // Буквы с "хвостами" внизу
+  --tallDown-height: 85%;
+  --tallDown-top: 15%;
+  
+  // Низкие буквы (большинство строчных)
+  --low-height: 70%;
+  --low-top: 25%;
+  
+  // Маленькие по высоте символы (верхние)
+  --smallUp-height: 40%;
+  --smallUp-top: 0%;
+
+  // Маленькие по высоте символы (центральные)
+  --smallCenter-height: 40%;
+  --smallCenter-top: 40%;
+
+  // Маленькие по высоте символы (нижние)
+  --smallDown-height: 40%;
+  --smallDown-top: 60%;
+}
+
+
+// --- Структура и стили библиотеки ---
+
+.word-wrapper {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.letter {
+  position: relative;
+  display: inline-block;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% + var(--blur-text-padding, 0.2em));
+    z-index: -1;
+    pointer-events: none;
+    border-radius: var(--blur-text-radius, 4px);
+    
+    -webkit-backdrop-filter: blur(var(--blur-text-amount, 5px));
+    backdrop-filter: blur(var(--blur-text-amount, 5px));
+    
+    // Маска для создания "рваных" краёв у размытия
+    mask-image: 
+      linear-gradient(to top, transparent 0%, black var(--blur-text-mask-sharpness, 25%)),
+      linear-gradient(to bottom, transparent 0%, black var(--blur-text-mask-sharpness, 25%)),
+      linear-gradient(to left, transparent 0%, black var(--blur-text-mask-sharpness, 25%)),
+      linear-gradient(to right, transparent 0%, black var(--blur-text-mask-sharpness, 25%));
+    mask-composite: intersect;
+    -webkit-mask-composite: destination-in;
+  }
+
+  &.tallUp {
+    &::before, &::after {
+      height: calc(var(--tallUp-height) * var(--blur-height-multiplier));
+      top: calc(var(--tallUp-top) + (var(--tallUp-height) / 2) * (1 - var(--blur-height-multiplier)));
+    }
+  }
+
+  &.tallDown {
+    &::before, &::after {
+      height: calc(var(--tallDown-height) * var(--blur-height-multiplier));
+      top: calc(var(--tallDown-top) + (var(--tallDown-height) / 2) * (1 - var(--blur-height-multiplier)));
+    }
+  }
+
+  &.low {
+    &::before, &::after {
+      height: calc(var(--low-height) * var(--blur-height-multiplier));
+      top: calc(var(--low-top) + (var(--low-height) / 2) * (1 - var(--blur-height-multiplier)));
+    }
+  }
+
+  &.smallUp {
+    &::before, &::after {
+      height: calc(var(--smallUp-height) * var(--blur-height-multiplier));
+      top: calc(var(--smallUp-top) + (var(--smallUp-height) / 2) * (1 - var(--blur-height-multiplier)));
+    }
+  }
+
+  &.smallCenter {
+    &::before, &::after {
+      height: calc(var(--smallCenter-height) * var(--blur-height-multiplier));
+      top: calc(var(--smallCenter-top) + (var(--smallCenter-height) / 2) * (1 - var(--blur-height-multiplier)));
+    }
+  }
+  
+  &.smallDown {
+    &::before, &::after {
+      height: calc(var(--smallDown-height) * var(--blur-height-multiplier));
+      top: calc(var(--smallDown-top) + (var(--smallDown-height) / 2) * (1 - var(--blur-height-multiplier)));
+    }
+  }
+}

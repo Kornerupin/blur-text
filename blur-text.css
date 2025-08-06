@@ -1,0 +1,72 @@
+/*
+ * Стили для библиотеки BlurText
+ * Версия: 1.3
+ */
+:root {
+  --blur-text-amount: 5px;
+  --blur-text-padding: 0.2em;
+  --blur-text-radius: 4px;
+  --blur-text-mask-sharpness: 25%;
+  --blur-height-multiplier: 1;
+}
+:root {
+  --tallUp-height: 100%;
+  --tallUp-top: 0%;
+  --tallDown-height: 85%;
+  --tallDown-top: 15%;
+  --low-height: 70%;
+  --low-top: 25%;
+  --smallUp-height: 40%;
+  --smallUp-top: 0%;
+  --smallCenter-height: 40%;
+  --smallCenter-top: 40%;
+  --smallDown-height: 40%;
+  --smallDown-top: 60%;
+}
+.word-wrapper {
+  display: inline-block;
+  white-space: nowrap;
+}
+.letter {
+  position: relative;
+  display: inline-block;
+}
+.letter::before, .letter::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% + var(--blur-text-padding, 0.2em));
+  z-index: -1;
+  pointer-events: none;
+  border-radius: var(--blur-text-radius, 4px);
+  -webkit-backdrop-filter: blur(var(--blur-text-amount, 5px));
+  backdrop-filter: blur(var(--blur-text-amount, 5px));
+  mask-image: linear-gradient(to top, transparent 0%, black var(--blur-text-mask-sharpness, 25%)), linear-gradient(to bottom, transparent 0%, black var(--blur-text-mask-sharpness, 25%)), linear-gradient(to left, transparent 0%, black var(--blur-text-mask-sharpness, 25%)), linear-gradient(to right, transparent 0%, black var(--blur-text-mask-sharpness, 25%));
+  mask-composite: intersect;
+  -webkit-mask-composite: destination-in;
+}
+.letter.tallUp::before, .letter.tallUp::after {
+  height: calc(var(--tallUp-height) * var(--blur-height-multiplier));
+  top: calc(var(--tallUp-top) + (var(--tallUp-height) / 2) * (1 - var(--blur-height-multiplier)));
+}
+.letter.tallDown::before, .letter.tallDown::after {
+  height: calc(var(--tallDown-height) * var(--blur-height-multiplier));
+  top: calc(var(--tallDown-top) + (var(--tallDown-height) / 2) * (1 - var(--blur-height-multiplier)));
+}
+.letter.low::before, .letter.low::after {
+  height: calc(var(--low-height) * var(--blur-height-multiplier));
+  top: calc(var(--low-top) + (var(--low-height) / 2) * (1 - var(--blur-height-multiplier)));
+}
+.letter.smallUp::before, .letter.smallUp::after {
+  height: calc(var(--smallUp-height) * var(--blur-height-multiplier));
+  top: calc(var(--smallUp-top) + (var(--smallUp-height) / 2) * (1 - var(--blur-height-multiplier)));
+}
+.letter.smallCenter::before, .letter.smallCenter::after {
+  height: calc(var(--smallCenter-height) * var(--blur-height-multiplier));
+  top: calc(var(--smallCenter-top) + (var(--smallCenter-height) / 2) * (1 - var(--blur-height-multiplier)));
+}
+.letter.smallDown::before, .letter.smallDown::after {
+  height: calc(var(--smallDown-height) * var(--blur-height-multiplier));
+  top: calc(var(--smallDown-top) + (var(--smallDown-height) / 2) * (1 - var(--blur-height-multiplier)));
+}
